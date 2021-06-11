@@ -58,14 +58,12 @@ app.get("/clicks", function(req, res) {
 });
 
 app.post("/clicks", function(req, res) {
-  try {console.log('ROHANROHANROHANROHANROHAN', req, req.query, req.query.length, typeof req.query)} catch{}
-  if (!req || !req.query || !req.query.length || typeof req.query != 'string') return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
+  try {console.log('ROHANROHANROHANROHANROHAN',req.query, typeof req.query.o, valid_options.includes(req.query.o))} catch{}
+  if (!req || !req.query || !req.query.o || typeof req.query.o !== 'string' || !valid_options.includes(req.query.o)) {
+    return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
+  }
 
-  var option = new URLSearchParams(req.query).get('o');
-  try {console.log('ROHANROHANROHANROHANROHAN', option, valid_options.includes(option))} catch{}
-  if (!option || !valid_options.includes(option)) return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
-
-  db.collection(COLLECTION).update({name: option}, {$inc: {count: 1}}, function(err, doc) {
+  db.collection(COLLECTION).update({name: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
     if (err) return handleError(res, err.message, 'Failed to save choice');
     res.status(200).json(doc.ops[0]);
   })
