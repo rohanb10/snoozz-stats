@@ -1,5 +1,5 @@
 {
-  "name": "Snoozz Stats",
+  "name": "SnoozzStats",
   "version": "1.0.0",
   "description": "Click Stats for Snoozz",
   "main": "server.js",
