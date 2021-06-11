@@ -23,7 +23,7 @@ const valid_options = [
 var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
-app.use(cors())
+// app.use(cors())
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
@@ -47,25 +47,25 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 });
 
 // Generic error handler used by all endpoints.
-function handleError(res, reason, message, code) {
-  console.log('ERROR: ' + reason);
-  res.status(code || 500).json({why: message});
+function handleError(res, msg, code) {
+  console.log('ERROR: ' + msg);
+  res.status(code || 500).json({why: msg});
 }
 
-app.get('/clicks', function(req, res) {
+app.get('/clicks', cors({origin: 'https://snoozz.me'}) function(req, res) {
   db.collection(COLLECTION).find({}).toArray(function(err, docs) {
-    if (err) return handleError(res, err.message, 'Failed to get clicks.');
+    if (err) return handleError(res, 'No Stats 4 U.');
     res.status(200).json(docs);
   });
 });
 
 app.post('/clicks', function(req, res) {
-  if (!req || !req.query || !req.query.o || typeof req.query.o !== 'string' || !valid_options.includes(req.query.o)) {
+  if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.query.o)) {
     return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
   }
 
   db.collection(COLLECTION).update({option: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
-    if (err) return handleError(res, err.message, 'Failed to save choice');
+    if (err) return handleError(res, 'Nice try, but you can do better');
     res.status(200).json({result: 'You did it!'});
   })
 });
