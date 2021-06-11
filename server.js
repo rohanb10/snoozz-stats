@@ -47,7 +47,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 // Generic error handler used by all endpoints.
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
-  res.status(code || 500).json({"error": message});
+  res.status(code || 500).json({why: message});
 }
 
 app.get("/clicks", function(req, res) {
@@ -55,9 +55,9 @@ app.get("/clicks", function(req, res) {
 });
 
 app.post("/clicks", function(req, res) {
-  if (!req) return handleError(res, 'Bad Input', 'Get out of my house', 400);
-  if (!req.body || !req.body.o || typeof req.body.o != 'string' || !valid_options.includes(req.body.o)) {
-    return handleError(res, 'Invalid option', 'Nice try. But do better next time', 400);
+  console.log(req);
+  if (!req || !req.body || !req.body.o || typeof req.body.o != 'string' || !valid_options.includes(req.body.o)) {
+    return handleError(res, 'Bad Input', 'Get out of my house', 400);
   } else {
     var option = {choice: req.body.o}
     db.collection(COLLECTION).update({name: req.body.o}, {$inc: {count: 1}}, function(err, doc) {
