@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
+var COLLECTION = "clicks";
 const valid_options = [
   'startup',
   'in-an-hour',
@@ -50,7 +51,7 @@ function handleError(res, reason, message, code) {
 }
 
 app.get("/clicks", function(req, res) {
-  db.clicks.find({}).toArray(function(err, docs) {
+  db.collection(COLLECTION).find({}).toArray(function(err, docs) {
     if (err) return handleError(res, err.message, "Failed to get clicks.");
     res.status(200).json(docs);
   });
@@ -62,7 +63,7 @@ app.post("/clicks", function(req, res) {
     return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
   }
 
-  db.clicks.update({option: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
+  db.collection(COLLECTION).update({option: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
     if (err) return handleError(res, err.message, 'Failed to save choice');
     res.status(200).json(doc);
   })
