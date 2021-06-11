@@ -54,18 +54,18 @@ function handleError(res, msg, code) {
 
 app.get('/clicks', function(req, res) {
   db.collection(COLLECTION).find({}).toArray(function(err, docs) {
-    if (err) return handleError(res, 'No Stats 4 U.');
+    if (err) return handleError(res, 'No Stats 4 U.', 503);
     res.status(200).json(docs);
   });
 });
 
 app.post('/clicks', function(req, res) {
   if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.body.o)) {
-    return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
+    return handleError(res,'Get your shit inputs out of my swamp', 418);
   }
 
   db.collection(COLLECTION).update({option: req.body.o}, {$inc: {count: 1}}, function(err, doc) {
-    if (err) return handleError(res, 'Nice try, but you can do better');
-    res.status(200).json({result: 'You did it!'});
+    if (err) return handleError(res, 'I dont want it');
+    res.status(200).json({nice: 'Noice'});
   })
 });
