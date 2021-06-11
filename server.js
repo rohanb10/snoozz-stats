@@ -23,7 +23,7 @@ const valid_options = [
 var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
-// app.use(cors())
+app.use(cors({methods: ['GET', 'POST']}))
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 var db;
@@ -52,14 +52,14 @@ function handleError(res, msg, code) {
   res.status(code || 500).json({why: msg});
 }
 
-app.get('/clicks', cors({origin: 'https://snoozz.me'}), function(req, res) {
+app.get('/clicks', function(req, res) {
   db.collection(COLLECTION).find({}).toArray(function(err, docs) {
     if (err) return handleError(res, 'No Stats 4 U.');
     res.status(200).json(docs);
   });
 });
 
-app.post('/clicks', cors(), function(req, res) {
+app.post('/clicks', function(req, res) {
   if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.query.o)) {
     return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
   }
