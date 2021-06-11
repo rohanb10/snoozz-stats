@@ -59,7 +59,7 @@ app.get('/clicks', cors({origin: 'https://snoozz.me'}), function(req, res) {
   });
 });
 
-app.post('/clicks', function(req, res) {
+app.post('/clicks', cors(), function(req, res) {
   if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.query.o)) {
     return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
   }
