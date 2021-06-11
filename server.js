@@ -52,7 +52,7 @@ function handleError(res, msg, code) {
   res.status(code || 500).json({why: msg});
 }
 
-app.get('/clicks', cors({origin: 'https://snoozz.me'}) function(req, res) {
+app.get('/clicks', cors({origin: 'https://snoozz.me'}), function(req, res) {
   db.collection(COLLECTION).find({}).toArray(function(err, docs) {
     if (err) return handleError(res, 'No Stats 4 U.');
     res.status(200).json(docs);
