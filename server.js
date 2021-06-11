@@ -60,11 +60,11 @@ app.get('/clicks', function(req, res) {
 });
 
 app.post('/clicks', function(req, res) {
-  if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.query.o)) {
+  if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.body.o)) {
     return handleError(res, 'Bad Input', 'Get out of my swamp', 400);
   }
 
-  db.collection(COLLECTION).update({option: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
+  db.collection(COLLECTION).update({option: req.body.o}, {$inc: {count: 1}}, function(err, doc) {
     if (err) return handleError(res, 'Nice try, but you can do better');
     res.status(200).json({result: 'You did it!'});
   })
