@@ -65,6 +65,6 @@ app.post("/clicks", function(req, res) {
 
   db.collection(COLLECTION).update({name: req.query.o}, {$inc: {count: 1}}, function(err, doc) {
     if (err) return handleError(res, err.message, 'Failed to save choice');
-    res.status(200).json(doc.ops[0]);
+    res.status(200).json(doc);
   })
 });
