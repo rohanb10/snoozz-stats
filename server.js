@@ -51,18 +51,20 @@ function handleError(res, reason, message, code) {
 }
 
 app.get("/clicks", function(req, res) {
-
+  db.collection(COLLECTION).find({}).toArray(function(err, docs) {
+    if (err) return handleError(res, err.message, "Failed to get clicks.");
+    res.status(200).json(docs);
+  });
 });
 
 app.post("/clicks", function(req, res) {
-  console.log(req);
-  if (!req || !req.body || !req.body.o || typeof req.body.o != 'string' || !valid_options.includes(req.body.o)) {
-    return handleError(res, 'Bad Input', 'Get out of my house', 400);
-  } else {
-    var option = {choice: req.body.o}
-    db.collection(COLLECTION).update({name: req.body.o}, {$inc: {count: 1}}, function(err, doc) {
-      if (err) return handleError(res, err.message, 'Failed to save choice');
-      res.status(200).json(doc.ops[0]);
-    })
-  }
+  if (!req || !req.query || !req.query.length || typeof req.query != 'string') return handleError(res, 'Bad Input', 'Get out of my house', 400);
+
+  var option = new URLSearchParams(req.query).get('o');
+  if (!option || !valid_options.includes(req.body.o)) return handleError(res, 'Bad Input', 'Get out of my house', 400);
+  
+  db.collection(COLLECTION).update({name: option}, {$inc: {count: 1}}, function(err, doc) {
+    if (err) return handleError(res, err.message, 'Failed to save choice');
+    res.status(200).json(doc.ops[0]);
+  })
 });
