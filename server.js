@@ -6,18 +6,18 @@ var ObjectID = mongodb.ObjectID;
 
 var COLLECTION = "clicks";
 const valid_options = [
-  "On Next Startup",
-  "In One Hour",
-  "This Morning",
-  "This Evening",
-  "Tomorrow Morning",
-  "Tomorrow Evening",
-  "Weekend",
-  "Next Monday",
-  "Next Week",
-  "Next Month",
-  "Choose your own time"
-];
+  'startup',
+  'in-an-hour',
+  'today-morning',
+  'today-evening',
+  'tom-morning',
+  'tom-evening',
+  'weekend',
+  'monday',
+  'week',
+  'month',
+  'custom'
+]
 
 var app = express();
 app.use(express.static(__dirname + "/public"));
