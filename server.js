@@ -7,8 +7,7 @@ var ObjectID = mongodb.ObjectID;
 
 var db, COLLECTION = 'clicks', app = express();
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
-app.use(cors({methods: ['GET', 'POST']}))
+app.use(bodyParser.text());
 
 mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   if (err) {
