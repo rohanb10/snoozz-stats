@@ -7,7 +7,7 @@ var ObjectID = mongodb.ObjectID;
 
 var db, COLLECTION = 'clicks', app = express();
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.text());
+app.use(bodyParser.text({limit: '1kb'}));
 
 mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   if (err) {
@@ -50,7 +50,7 @@ const valid_options = [
   'custom'
 ];
 
-app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
+app.post('/clicks', cors({methods: ['POST'], origin: ['/^(chrome\-|moz\-)?extension:\/\/.*/']}), function(req, res) {
   if (!req || !req.body || typeof req.body !== 'string' || !req.body.length || !valid_options.includes(req.body)) {
     return handleError(res, 'Get out of my swamp', 418);
   }
