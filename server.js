@@ -30,7 +30,7 @@ function handleError(res, msg, code) {
   res.status(code || 500).json({why: msg});
 }
 
-app.get('/clicks', cors({methods: ['GET'], origin: ['https://snoozz.me', 'http://127.0.0.1:9999']}) function(req, res) {
+app.get('/clicks', cors({methods: ['GET'], origin: ['https://snoozz.me', 'http://127.0.0.1:9999']}), function(req, res) {
   db.collection(COLLECTION).find({}, {_id: 0}).toArray(function(err, docs) {
     if (err) return handleError(res, 'No Stats 4 U.', 503);
     res.status(200).json(docs);
