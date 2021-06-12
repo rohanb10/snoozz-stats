@@ -51,7 +51,10 @@ const valid_options = [
   'custom'
 ];
 
-app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
+app.post('/clicks', cors({methods: ['POST']}), function(res, req, next) {
+  res.set('Content-Type', 'application/json');
+  next();
+}, function(req, res) {
   if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.body.o)) {
     return handleError(res,'Get your shit inputs out of my swamp', 418);
   }
