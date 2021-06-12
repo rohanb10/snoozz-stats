@@ -51,15 +51,12 @@ const valid_options = [
   'custom'
 ];
 
-app.post('/clicks', cors({methods: ['POST']}), function(res, req, next) {
-  res.set('Content-Type', 'application/json');
-  next();
-}, function(req, res) {
-  if (!req || !req.body || !req.body.o || !req.body.o.length || typeof req.body.o !== 'string' || !valid_options.includes(req.body.o)) {
-    return handleError(res,'Get your shit inputs out of my swamp', 418);
+app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
+  if (!req || !req.body || typeof req.body !== 'string' || !req.body.length || !valid_options.includes(req.body)) {
+    return handleError(res, 'Get out of my swamp', 418);
   }
 
-  db.collection(COLLECTION).update({option: req.body.o}, {$inc: {count: 1}}, function(err, doc) {
+  db.collection(COLLECTION).update({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
     if (err) return handleError(res, 'I dont want it');
     res.status(200).json({nice: 'Noice'});
   })
