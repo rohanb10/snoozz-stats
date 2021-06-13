@@ -29,9 +29,13 @@ function handleError(res, msg, code) {
   res.status(code || 500).json({why: msg});
 }
 
-app.get('/clicks', cors({methods: ['GET'], origin: ['https://snoozz.me', 'http://127.0.0.1:9000']}), function(req, res) {
+app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
+  console.log('ORIGIN ', req.headers.origin);
+  if (!req || !req.headers || !req.headers.origin || !['https://snoozz.me', 'http://127.0.0.1:9000'].includes(req.headers.origin)) {
+    return handleError('Who are you?', 403)
+  }
   db.collection(COLLECTION).find({}, {_id: 0}).toArray(function(err, docs) {
-    if (err) return handleError(res, 'No Stats 4 U.', 503);
+    if (err) return handleError(res, 'No Stats 4 U.', 200);
     res.status(200).json(docs);
   });
 });
@@ -50,8 +54,12 @@ const valid_options = [
   'custom'
 ];
 
-app.post('/clicks', cors({methods: ['POST'], origin: /^(chrome\-|moz\-)?extension:\/\/.*/}), function(req, res) {
-  if (!req || !req.body || typeof req.body !== 'string' || !req.body.length || !valid_options.includes(req.body)) {
+app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
+  console.log('ORIGIN ', req.headers.origin);
+  if (!req || !req.headers || !req.headers.origin || !/^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*/.test(req.headers.origin)) {
+    return handleError(res, 'I dont even know who you are', 403)
+  }
+  if (!req.body || typeof req.body !== 'string' || !req.body.length || !valid_options.includes(req.body)) {
     return handleError(res, 'Get out of my swamp', 418);
   }
 
