@@ -98,7 +98,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     });
   } else if (req.body.indexOf('.') > -1) {
     var bs = req.body.split('.');
-    if (bs.length !== 2 || validChoices.includes(bs[0]) || !/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
+    if (bs.length !== 2 || !validChoices.includes(bs[0]) || !/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
       console.log('invalid | '+ bs[0] + ' | ' + bs[1]);
     } else {
       console.log('yes welcome in | '+ bs[0] + ' | ' + bs[1] + ' | ' + calcTime(bs[1]));
