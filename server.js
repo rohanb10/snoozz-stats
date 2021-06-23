@@ -98,17 +98,16 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     });
   } else if (req.body.indexOf('.') > -1) {
     var bs = req.body.split('.');
-    if (bs.length !== 2 || !validChoices.includes(bs[0]) || !/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
-      console.log('invalid | '+ bs[0] + ' | ' + bs[1]);
+    if (bs.length === 2 && validChoices.includes(bs[0]) && /^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
+      db.collection(T).update({option: calcTime(bs[1])}, {$inc: {count: 1}});
+      db.collection(C).update({option: bs[0]}, {$inc: {count: 1}}, function(err, doc) {
+        if (err) {
+          return reject(res, 'I dont want it');
+        }
+        res.status(200).json({nice: 'Noice'});
+      });
     } else {
-      console.log('yes welcome in | '+ bs[0] + ' | ' + bs[1] + ' | ' + calcTime(bs[1]));
-      // db.collection(C).update({option: bs[0]}, {$inc: {count: 1}}, function(err, doc) {
-      //   if (err) {
-      //     return reject(res, 'I dont want it');
-      //   }
-      //   res.status(200).json({nice: 'Noice'});
-      // });
-      // db.collection(T).update({option: calcTime(bs[1])}, {$inc: {count: 1}});
+      return reject(res, 'We dont like your type here');
     }
   }
   return reject(res, 'Get out of my swamp');
