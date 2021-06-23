@@ -33,9 +33,9 @@ app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !['https://snoozz.me', 'http://127.0.0.1:9000'].includes(req.headers.origin)) {
     return reject(res, 'Who are you?')
   }
-  db.collection(C).find({}, {_id: 0}).toArray(function(err, docs) {
+  db.collection(C).find({}, '-_id').toArray(function(err, docs) {
     if (err) {
-      return reject(res, 'No Stats 4 U.');
+      return reject(res, 'No Clicks 4 U.');
     }
     res.status(200).json(docs);
   });
@@ -43,11 +43,11 @@ app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
 
 app.get('/times', cors({methods: ['GET']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !['https://snoozz.me', 'http://127.0.0.1:9000'].includes(req.headers.origin)) {
-    return reject(res, 'Who are you?')
+    return reject(res, 'Who are you?');
   }
-  db.collection(T).find({}, {_id: 0}).toArray(function(err, docs) {
+  db.collection(T).find({}, '-_id').toArray(function(err, docs) {
     if (err) {
-      return reject(res, 'No Stats 4 U.');
+      return reject(res, 'No Times 4 U.');
     }
     res.status(200).json(docs);
   });
@@ -84,9 +84,11 @@ function calcTime(num) {
 }
 
 app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
-  if (!req || !req.headers || !req.headers.origin || !/^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*/.test(req.headers.origin)){
-    return reject(res, 'I dont even know who you are')
+  if (!req || !req.headers || !req.headers.origin || !/^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*/.test(req.headers.origin)) {
+    if (req.headers && req.headers.origin) console.log(req.headers.origin);
+    return reject(res, 'I dont even know who you are');
   }
+  console.log('ANUSTAT: ' + req.body);
   if (typeof req.body !== 'string') {
     return reject(res, 'Get out of my swamp');
   } else if (validChoices.includes(req.body)) {
@@ -98,9 +100,11 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     });
   } else if (req.body.indexOf('.') > -1) {
     var bs = req.body.split('.');
-    if (bs.length === 2 && validChoices.includes(bs[0]) && /^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
-      db.collection(T).update({option: calcTime(bs[1])}, {$inc: {count: 1}});
-      db.collection(C).update({option: bs[0]}, {$inc: {count: 1}}, function(err, doc) {
+    if (bs.length === 2 && /^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
+      db.collection(T).updateOne({option: calcTime(bs[1])}, {$inc: {count: 1}});
+    }
+    if (bs.length === 2 && validChoices.includes(bs[0])) {
+      db.collection(C).updateOne({option: bs[0]}, {$inc: {count: 1}}, function(err, doc) {
         if (err) {
           return reject(res, 'I dont want it');
         }
@@ -111,5 +115,4 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     }
   }
   return reject(res, 'Get out of my swamp');
-  
 });
