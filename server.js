@@ -31,7 +31,7 @@ app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !['https://snoozz.me', 'http://127.0.0.1:9000'].includes(req.headers.origin)) {
     return reject(res, 'Who are you?')
   }
-  db.collection(C).find({}, '-_id').toArray(function(err, docs) {
+  db.collection(C).find({}, {_id: 0, option: 1, count: 1}).toArray(function(err, docs) {
     if (err) return reject(res, 'No Clicks 4 U.');
     res.status(200).json(docs);
   });
@@ -41,7 +41,7 @@ app.get('/times', cors({methods: ['GET']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !['https://snoozz.me', 'http://127.0.0.1:9000'].includes(req.headers.origin)) {
     return reject(res, 'Who are you?');
   }
-  db.collection(T).find({}, '-_id').toArray(function(err, docs) {
+  db.collection(T).find({}, {_id: 0, when: 1, count: 1}).toArray(function(err, docs) {
     if (err) return reject(res, 'No Times 4 U.');
     res.status(200).json(docs);
   });
