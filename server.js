@@ -463,7 +463,7 @@ function calcTime(num) {
   return pad(h) + pad(m);
 }
 
-app.post('/setupwhynot'. cors(), function(req, res) {
+app.post('/setupwhynot', cors(), function(req, res) {
   setupTimes();
 });
 
