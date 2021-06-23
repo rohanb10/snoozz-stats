@@ -37,7 +37,7 @@ app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
     if (err) {
       return reject(res, 'No Clicks 4 U.');
     }
-    res.status(200).json(docs);
+    return res.status(200).json(docs);
   });
 });
 
@@ -49,7 +49,7 @@ app.get('/times', cors({methods: ['GET']}), function(req, res) {
     if (err) {
       return reject(res, 'No Times 4 U.');
     }
-    res.status(200).json(docs);
+    return res.status(200).json(docs);
   });
 });
 
@@ -70,16 +70,9 @@ var validChoices = [
 // round time to nearest 15 mins
 function calcTime(num) {
   var pad = n => n < 10 ? '0' + n : '' + n;
-
   var [h, m] = num.toString().match(/\d{2}/g).map(n => parseInt(n));
-  if (Math.round(m/15) == 0) m = 0;
-  if (Math.round(m/15) == 1) m = 15;
-  if (Math.round(m/15) == 2) m = 30;
-  if (Math.round(m/15) == 3) m = 45;
-  if (Math.round(m/15) == 4) {
-    h = (h + 1) % 24;
-    m = 0;
-  }
+  if (Math.round(m/15) == 4) h = (h + 1) % 24;
+  m = (Math.round(m/15) * 15) % 60;
   return pad(h) + pad(m);
 }
 
@@ -92,11 +85,11 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
   if (typeof req.body !== 'string') {
     return reject(res, 'Get out of my swamp');
   } else if (validChoices.includes(req.body)) {
-    db.collection(C).update({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
+    db.collection(C).updateOne({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
       if (err) {
         return reject(res, 'I dont want it');
       }
-      res.status(200).json({nice: 'Noice'});
+      return res.status(200).json({nice: 'Noice'});
     });
   } else if (req.body.indexOf('.') > -1) {
     var bs = req.body.split('.');
@@ -108,11 +101,11 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
         if (err) {
           return reject(res, 'I dont want it');
         }
-        res.status(200).json({nice: 'Noice'});
+        return res.status(200).json({nice: 'Noice'});
       });
     } else {
       return reject(res, 'We dont like your type here');
     }
   }
-  return reject(res, 'Get out of my swamp');
+  return reject(res, 'Get out of my swamp');  
 });
