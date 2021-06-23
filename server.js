@@ -17,10 +17,8 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
 
   db = database.db('stats');
   console.log('Database connection ready');
-
   var server = app.listen(process.env.PORT || 8080, function () {
-    var port = server.address().port;
-    console.log('App now running on port', port);
+    console.log('App now running on port', server.address().port);
   });
 });
 
@@ -34,10 +32,8 @@ app.get('/clicks', cors({methods: ['GET']}), function(req, res) {
     return reject(res, 'Who are you?')
   }
   db.collection(C).find({}, '-_id').toArray(function(err, docs) {
-    if (err) {
-      return reject(res, 'No Clicks 4 U.');
-    }
-    return res.status(200).json(docs);
+    if (err) return reject(res, 'No Clicks 4 U.');
+    res.status(200).json(docs);
   });
 });
 
@@ -46,10 +42,8 @@ app.get('/times', cors({methods: ['GET']}), function(req, res) {
     return reject(res, 'Who are you?');
   }
   db.collection(T).find({}, '-_id').toArray(function(err, docs) {
-    if (err) {
-      return reject(res, 'No Times 4 U.');
-    }
-    return res.status(200).json(docs);
+    if (err) return reject(res, 'No Times 4 U.');
+    res.status(200).json(docs);
   });
 });
 
@@ -79,33 +73,25 @@ function calcTime(num) {
 app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !/^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*/.test(req.headers.origin)) {
     if (req.headers && req.headers.origin) console.log(req.headers.origin);
-    return reject(res, 'I dont even know who you are');
+    return reject(res, 'This is not the server you are looking for');
   }
   console.log('ANUSTAT: ' + req.body);
   if (typeof req.body !== 'string') {
-    return reject(res, 'Get out of my swamp');
+    reject(res, 'Dont send me this garbage');
   } else if (validChoices.includes(req.body)) {
     db.collection(C).updateOne({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
-      if (err) {
-        return reject(res, 'I dont want it');
-      }
-      return res.status(200).json({nice: 'Noice'});
+      if (err) return reject(res, 'I dont want it');
+      res.status(200).json({nice: 'Noice'});
     });
-  } else if (req.body.indexOf('.') > -1) {
-    var bs = req.body.split('.');
-    if (bs.length === 2 && /^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(bs[1])) {
-      db.collection(T).updateOne({option: calcTime(bs[1])}, {$inc: {count: 1}});
+  } else if (req.body.indexOf('.') > -1 && req.body.split('.').length === 2) {
+    var [choice, time] = req.body.split('.');
+    if (/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(time) && validChoices.includes(choice)) {
+      db.collection(T).updateOne({when: calcTime(time)}, {$inc: {count: 1}});
+      db.collection(C).updateOne({option: choice}, {$inc: {count: 1}});
+      return res.status(200).json({nice: 'Noice'});
     }
-    if (bs.length === 2 && validChoices.includes(bs[0])) {
-      db.collection(C).updateOne({option: bs[0]}, {$inc: {count: 1}}, function(err, doc) {
-        if (err) {
-          return reject(res, 'I dont want it');
-        }
-        return res.status(200).json({nice: 'Noice'});
-      });
-    } else {
-      return reject(res, 'We dont like your type here');
-    }
+    reject(res, 'We dont like your type here');
+  } else {
+    reject(res, 'Get out of my swamp');
   }
-  return reject(res, 'Get out of my swamp');  
 });
