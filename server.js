@@ -465,7 +465,7 @@ function calcTime(num) {
 
 app.post('/setupwhynot'. cors(), function(req, res) {
   setupTimes();
-}
+});
 
 app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
   if (!req || !req.headers || !req.headers.origin || !/^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*/.test(req.headers.origin)) {
