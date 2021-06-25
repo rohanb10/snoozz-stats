@@ -81,7 +81,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     db.collection(C).updateOne({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
       if (err) return reject(res, 'POST CLICKS', 'I dont want it | ' + req.body);
       res.status(200).json({nice: 'Noice'});
-      console.log('OLD STAT:   ' + req.body);
+      console.log('OLD STAT:    ' + req.body);
     });
   } else if (req.body.indexOf('.') > -1 && req.body.split('.').length === 2) {
     var [choice, time] = req.body.split('.');
@@ -89,7 +89,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
       db.collection(T).updateOne({when: calcTime(time)}, {$inc: {count: 1}});
       db.collection(C).updateOne({option: choice}, {$inc: {count: 1}});
       res.status(200).json({nice: 'Noice'});
-      console.log('NEW STAT:   ' + req.body + ' | ' + choice + ' ' + calcTime(time));
+      console.log('NEW STAT:    ' + req.body + ' | ' + choice + ' ' + calcTime(time));
     }
     reject(res, 'POST CLICKS:', 'We dont like your type here | ' + choice + ' ' + time);
   } else {
