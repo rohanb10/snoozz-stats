@@ -75,22 +75,16 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     var intruder = (req.headers && req.headers.origin) ? req.headers.origin : 'stranger danger';
     return reject(res, 'POST CLICKS:', 'This is not the server you are looking for | ' + intruder);
   }
-  if (typeof req.body !== 'string' && req.body.length) {
+  if (!req.body || (typeof req.body !== 'string' && req.body.length)) {
     reject(res, 'POST CLICKS:', 'Dont send me this garbage');
-  } else if (validChoices.includes(req.body)) {
-    db.collection(C).updateOne({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
-      if (err) return reject(res, 'POST CLICKS', 'I dont want it | ' + req.body);
-      res.status(200).json({nice: 'Noice'});
-      console.log('OLD STAT:    ' + req.body);
-    });
-  } else if (req.body.indexOf('.') > -1 && req.body.split('.').length === 2) {
+  } else if (req.body === 'startup' || (req.body.indexOf('.') > -1 && req.body.split('.').length === 2)) {
     var [choice, time] = req.body.split('.'), output = [];
 
-    if (validChoices.includes(choice)) {
+    if (choice && validChoices.includes(choice)) {
       db.collection(C).updateOne({option: choice}, {$inc: {count: 1}});
       output.push(choice);
     }
-    if (/^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(time)) {
+    if (time && /^([0-1][0-9]|[2][0-3])[0-5][0-9]$/.test(time)) {
       db.collection(T).updateOne({when: calcTime(time)}, {$inc: {count: 1}});
       output.push(calcTime(time));
     }
@@ -101,7 +95,13 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     } else {
       reject(res, 'POST CLICKS:', 'We dont like your type here | ' + req.body);
     }
+  } else if (validChoices.includes(req.body)) {
+    db.collection(C).updateOne({option: req.body}, {$inc: {count: 1}}, function(err, doc) {
+      if (err) return reject(res, 'POST CLICKS', 'I dont want it | ' + req.body);
+      res.status(200).json({nice: 'Noice'});
+      console.log('OLD STAT:    ' + req.body);
+    });
   } else {
-    reject(res, 'POST CLICKS:', 'Get out of my swamp');
+    reject(res, 'POST CLICKS:', 'Get out of my swamp | ' + req.body);
   }
 });
