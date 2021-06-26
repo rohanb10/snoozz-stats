@@ -77,7 +77,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
   }
   if (!req.body || typeof req.body == 'undefined'|| (typeof req.body !== 'string' && req.body.length)) {
     reject(res, 'POST CLICKS:', 'Dont send me this garbage');
-  } else if (req.body === 'startup' || (req.body.indexOf('.') > -1 && req.body.split('.').length === 2)) {
+  } else if (req.body === 'startup' || (req.body.indexOf && req.body.indexOf('.') > -1 && req.body.split && req.body.split('.').length === 2)) {
     var [choice, time] = req.body.split('.'), output = [];
 
     if (choice && validChoices.includes(choice)) {
