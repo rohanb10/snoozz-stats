@@ -85,7 +85,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
     });
   } else if (req.body.indexOf('.') > -1 && req.body.split('.').length === 2) {
     var [choice, time] = req.body.split('.'), output = [];
-    
+
     if (validChoices.includes(choice)) {
       db.collection(C).updateOne({option: choice}, {$inc: {count: 1}});
       output.push(choice);
@@ -97,7 +97,7 @@ app.post('/clicks', cors({methods: ['POST']}), function(req, res) {
 
     if (output.length) {
       res.status(200).json({nice: 'Noice'});
-      console.log('NEW STAT:    ' + req.body + (output.length ? ' | ' + output.join(' ')));
+      console.log('NEW STAT:    ' + req.body + (output.length ? ' | ' + output.join(' ') : ''));
     } else {
       reject(res, 'POST CLICKS:', 'We dont like your type here | ' + req.body);
     }
