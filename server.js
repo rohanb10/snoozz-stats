@@ -20,7 +20,7 @@ var validChoices = [
   'month',
   'custom'
 ];
-var trusted = ['https://snoozz.me', 'http://127.0.0.1:9000'];
+var trusted = ['https://snoozz.me', 'http://127.0.0.1:9000', 'http://127.0.0.1:8080'];
 var extensions = new RegExp('^(safari-web\-|chrome\-|moz\-)?extension:\/\/.*');
 
 app.use(express.static(__dirname + '/public'));
