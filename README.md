@@ -16,4 +16,4 @@ Sub in the Mongo Connection URL and run `npm start` to test locally
 
 Deploy on Heroku `git push heroku main`
 
-Heroku logs `heroku logs --tail`
+Heroku logs `heroku logs -s app -d web -t`

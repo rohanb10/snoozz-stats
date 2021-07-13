@@ -10,35 +10,57 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
 
 	<style type="text/css">
-		body {
+		html, body {
+			height: 100%;
 			margin: 0;
-			padding: .5rem;
+			padding: 0;
+			color: #FFF;
+		}
+		a, a:visited {
+			color: #2196f3;
+		}
+		*::selection {
+			color: #009688;
+		}
+		html {
+			background: url(bg.svg) center no-repeat;
+			background-size: cover;
 			font-family: Helvetica, sans-serif;
 		}
-		h1 {
-			font-size: 6em;
-			font-weight: 900;
-			background-image: linear-gradient(90deg, #f3b845 0%, #DF4E76 25%, #f3b845 50%, #DF4E76 75%, #f3b845 100%);
-			background-size: 200% auto;
-			color: #000;
-			background-clip: text;
-			text-fill-color: transparent;
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			animation: shine 10s linear infinite;
+		body > div {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
-		@keyframes shine {to {background-position: 200% center;}
-		@media
+		body > div > div {
+			padding: 2rem;
+			margin: 0 1rem;
+			backdrop-filter: blur(3px) saturate(200%);
+			-webkit-backdrop-filter: blur(3px) saturate(200%);
+			background-color: rgba(17, 25, 40, 0.65);
+			border-radius: 12px;
+			border: 1px solid #fff2;
+		}
+		h1 {
+			margin: 0;
+			font-size: 3em;
+			background-size: 200% auto;
+		}
+		p:last-of-type {
+			margin-bottom: 0;
+		}
 	</style>
 </head>
 <body>
-	<h1>Snoozz Stats API</h1>
-	<p>The source code for this API is <a href="https://github.com/rohanb10/snoozz-stats">on github</a>.</p>
-	<p>The data that passes through this is available to view publicly on <a href="https://snoozz.me/stats.html">Snooz Stats</a>.</p>
-	<p>This is built on top of MongoDB and hosted on Heroku.</p>
-	<p>To learn more about what's data is here, check out <a href="https://github.com/rohanb10/snoozz-tab-snoozing/issues/39">this post</a>.</p>
-	<p>You can get the Snoozz extension on <a href="https://chrome.google.com/webstore/detail/snoozz-snooze-tabs-window/lklendgldejcnkkaldoggoapclkepgfb">Chrome</a> and <a href="https://addons.mozilla.org/en-US/firefox/addon/snoozz/">Firefox</a> and <a href="https://github.com/rohanb10/snoozz-tab-snoozing/releases/latest/">Github</a>.</p>
-	<script type="text/javascript"></script>
-	<script src=""></script>
+	<div><div>
+		<h1>Snoozz Stats API</h1>
+		<p>The source code for this is <a href="https://github.com/rohanb10/snoozz-stats">on github</a>.</p>
+		<p>All data that passes through here is publicly available on <a href="https://snoozz.me/stats.html">Snooz Stats</a>.</p>
+		<p>This is built on top of MongoDB and hosted on Heroku. Check out <a href="https://github.com/rohanb10/snoozz-tab-snoozing/issues/39">this post</a> to learn more.</p>
+		<p>You can get the Snoozz extension on <a href="https://chrome.google.com/webstore/detail/snoozz-snooze-tabs-window/lklendgldejcnkkaldoggoapclkepgfb">Chrome</a> and <a href="https://addons.mozilla.org/en-US/firefox/addon/snoozz/">Firefox</a> and <a href="https://github.com/rohanb10/snoozz-tab-snoozing/releases/latest/">Github</a>.</p>
+		<script type="text/javascript"></script>
+		<p>Click here to go to <a href="https://snoozz.me">Snoozz homepage</a>.</p>
+	</div></div>
 </body>
 </html>
