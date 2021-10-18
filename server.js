@@ -61,6 +61,13 @@ app.get('/times', cors({methods: ['GET']}), (req, res) => {
   });
 });
 
+app.get('/total_clicks', cors({methods: ['GET']}), (req, res) => {
+  db.collection(C).aggregate([{$group: {_id: null, 'total': {$sum: '$count'}}}]).toArray((err, docs) => {
+    if (err || !docs || !docs.length || !docs[0].total || isNaN(parseInt(docs[0].total))) return reject(res, 'GET TOTAL:  ', 'Addition is hard.');
+    res.status(200).send(`${docs[0].total}`);
+  });
+});
+
 // round time to nearest 15 mins
 function calcTime(num) {
   var pad = n => (n < 10 ? '0' : '') + n;
